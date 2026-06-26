@@ -7,6 +7,8 @@ import { Product } from '@/types'
 
 const CATEGORIES = [
   { slug: 'ternos', label: 'Ternos', desc: 'Do clássico ao contemporâneo' },
+  { slug: 'feminino', label: 'Feminino', desc: 'Blazers, ternos e peças elegantes' },
+  { slug: 'infantil', label: 'Infantil', desc: 'Ternos para os pequenos' },
   { slug: 'gravatas', label: 'Gravatas', desc: 'Slim, tradicional e infantil' },
   { slug: 'camisas', label: 'Camisas', desc: 'Corte e qualidade para cada ocasião' },
   { slug: 'prendedores', label: 'Prendedores', desc: 'O detalhe que eleva o look' },

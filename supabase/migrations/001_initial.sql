@@ -16,7 +16,9 @@ INSERT INTO categories (name, slug, order_index) VALUES
   ('Ternos', 'ternos', 1),
   ('Gravatas', 'gravatas', 2),
   ('Camisas', 'camisas', 3),
-  ('Prendedores', 'prendedores', 4)
+  ('Prendedores', 'prendedores', 4),
+  ('Feminino', 'feminino', 5),
+  ('Infantil', 'infantil', 6)
 ON CONFLICT (slug) DO NOTHING;
 
 -- Produtos
@@ -80,3 +82,4 @@ CREATE POLICY "analytics_admin_read" ON analytics_events
 -- Execute manualmente no Supabase Dashboard:
 --   Storage > New bucket > Name: "product-images" > Public: ON
 -- =============================================
+""

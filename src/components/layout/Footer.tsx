@@ -52,6 +52,8 @@ export default function Footer() {
             <ul className="space-y-3">
               {[
                 { label: 'Ternos', slug: 'ternos' },
+                { label: 'Feminino', slug: 'feminino' },
+                { label: 'Infantil', slug: 'infantil' },
                 { label: 'Gravatas', slug: 'gravatas' },
                 { label: 'Camisas', slug: 'camisas' },
                 { label: 'Prendedores', slug: 'prendedores' },
