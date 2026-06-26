@@ -11,6 +11,7 @@ interface PageData {
   selected: boolean
   name: string
   price: string
+  sizes: string
 }
 
 export default function PdfImporter() {
@@ -46,6 +47,7 @@ export default function PdfImporter() {
         selected: false,
         name: `Terno ${i}`,
         price: '',
+        sizes: '',
       })
     }
 
@@ -59,7 +61,7 @@ export default function PdfImporter() {
     )
   }
 
-  function updatePage(i: number, key: 'name' | 'price', value: string) {
+  function updatePage(i: number, key: 'name' | 'price' | 'sizes', value: string) {
     setPages(prev =>
       prev.map((p, idx) => (idx === i ? { ...p, [key]: value } : p))
     )
@@ -93,6 +95,7 @@ export default function PdfImporter() {
           body: JSON.stringify({
             name: page.name,
             price: parseFloat(page.price) || 0,
+            description: page.sizes ? `Tamanhos disponíveis: ${page.sizes}` : '',
             category_slug: 'ternos',
             images: [urlData.publicUrl],
             active: true,
@@ -221,6 +224,13 @@ export default function PdfImporter() {
                       value={page.price}
                       onChange={e => updatePage(i, 'price', e.target.value)}
                       placeholder="Preço R$"
+                      className="w-full bg-[#0a0a0a] border border-[#2a2a2a] rounded px-2 py-1.5 text-white text-xs focus:outline-none focus:border-[#C9A84C]"
+                    />
+                    <input
+                      type="text"
+                      value={page.sizes}
+                      onChange={e => updatePage(i, 'sizes', e.target.value)}
+                      placeholder="Tamanhos (ex: 42 ao 66)"
                       className="w-full bg-[#0a0a0a] border border-[#2a2a2a] rounded px-2 py-1.5 text-white text-xs focus:outline-none focus:border-[#C9A84C]"
                     />
                   </div>

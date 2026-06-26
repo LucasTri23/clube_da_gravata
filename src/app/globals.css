@@ -1,35 +1,77 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #0a0a0a;
-  --color-foreground: #ededed;
-  --color-card: #141414;
-  --color-border: #2a2a2a;
   --color-gold: #C9A84C;
   --color-gold-light: #E2C87A;
   --color-gold-dark: #9A7A2E;
-  --color-muted: #6b7280;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+/* Dark mode (default) */
+:root,
+html.dark {
+  --bg: #0a0a0a;
+  --bg-card: #141414;
+  --bg-card-2: #1c1c1c;
+  --border: #2a2a2a;
+  --border-gold: rgba(201, 168, 76, 0.25);
+  --text: #ededed;
+  --text-sub: #b8b0a5;
+  --text-muted: #6b7280;
+  --gold: #C9A84C;
+  --gold-light: #E2C87A;
+  --gold-dark: #9A7A2E;
+  --navbar-bg: rgba(10, 10, 10, 0.96);
+  --footer-bg: #0e0e0e;
+  --hero-glow: rgba(201, 168, 76, 0.07);
+}
+
+/* Light mode */
+html.light {
+  --bg: #f6f1e8;
+  --bg-card: #ffffff;
+  --bg-card-2: #ede7da;
+  --border: #ddd4c0;
+  --border-gold: rgba(154, 111, 30, 0.3);
+  --text: #1a1510;
+  --text-sub: #4a3f32;
+  --text-muted: #8a7a60;
+  --gold: #9A6F1A;
+  --gold-light: #B8912C;
+  --gold-dark: #7A5010;
+  --navbar-bg: rgba(246, 241, 232, 0.96);
+  --footer-bg: #ede7da;
+  --hero-glow: rgba(154, 111, 30, 0.06);
 }
 
 * {
   box-sizing: border-box;
 }
 
-body {
-  background: #0a0a0a;
-  color: #ededed;
-  font-family: Arial, Helvetica, sans-serif;
+html {
+  scroll-behavior: smooth;
 }
 
-.scrollbar-thin::-webkit-scrollbar {
-  width: 4px;
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background 0.25s ease, color 0.25s ease;
+  min-height: 100vh;
 }
-.scrollbar-thin::-webkit-scrollbar-track {
-  background: #141414;
+
+/* Card hover via CSS (for theme-aware border) */
+.product-card:hover {
+  border-color: var(--border-gold) !important;
+  box-shadow: 0 8px 32px var(--hero-glow);
 }
-.scrollbar-thin::-webkit-scrollbar-thumb {
-  background: #C9A84C;
-  border-radius: 2px;
+
+.category-card:hover {
+  border-color: var(--border-gold) !important;
+  box-shadow: 0 4px 24px var(--hero-glow);
 }
+
+.scrollbar-thin::-webkit-scrollbar { width: 4px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: var(--bg-card); }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }

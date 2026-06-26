@@ -22,15 +22,19 @@ export default function CartDrawer() {
         className="fixed inset-0 bg-black/60 z-50 backdrop-blur-sm"
         onClick={closeCart}
       />
-      <aside className="fixed right-0 top-0 h-full w-full max-w-sm bg-[#141414] z-50 flex flex-col shadow-2xl border-l border-[#2a2a2a]">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#2a2a2a]">
-          <h2 className="text-white font-semibold flex items-center gap-2">
-            <ShoppingBag size={18} className="text-[#C9A84C]" />
+      <aside
+        className="fixed right-0 top-0 h-full w-full max-w-sm z-50 flex flex-col shadow-2xl border-l"
+        style={{ background: 'var(--bg-card)', borderColor: 'var(--border)' }}
+      >
+        <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--border)' }}>
+          <h2 className="font-semibold flex items-center gap-2" style={{ color: 'var(--text)' }}>
+            <ShoppingBag size={18} style={{ color: 'var(--gold)' }} />
             Meu Carrinho
           </h2>
           <button
             onClick={closeCart}
-            className="p-1 text-[#6b7280] hover:text-white transition-colors"
+            className="p-1 transition-opacity hover:opacity-60"
+            style={{ color: 'var(--text-muted)' }}
           >
             <X size={20} />
           </button>
@@ -39,11 +43,12 @@ export default function CartDrawer() {
         <div className="flex-1 overflow-y-auto scrollbar-thin px-5 py-4">
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center gap-4">
-              <ShoppingBag size={48} className="text-[#2a2a2a]" />
-              <p className="text-[#6b7280]">Seu carrinho está vazio</p>
+              <ShoppingBag size={48} style={{ color: 'var(--border)' }} />
+              <p style={{ color: 'var(--text-muted)' }}>Seu carrinho está vazio</p>
               <button
                 onClick={closeCart}
-                className="text-[#C9A84C] text-sm hover:underline"
+                className="text-sm hover:underline"
+                style={{ color: 'var(--gold)' }}
               >
                 Continuar comprando
               </button>
@@ -58,16 +63,17 @@ export default function CartDrawer() {
         </div>
 
         {items.length > 0 && (
-          <div className="border-t border-[#2a2a2a] px-5 py-5 space-y-4">
+          <div className="border-t px-5 py-5 space-y-4" style={{ borderColor: 'var(--border)' }}>
             <div className="flex justify-between items-center">
-              <span className="text-[#6b7280] text-sm">Total estimado</span>
-              <span className="text-white font-bold text-lg">
+              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>Total estimado</span>
+              <span className="font-bold text-lg" style={{ color: 'var(--text)' }}>
                 R${totalPrice.toFixed(2).replace('.', ',')}
               </span>
             </div>
             <button
               onClick={handleCheckout}
-              className="w-full bg-[#25D366] hover:bg-[#1ebe5a] text-white font-semibold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors"
+              className="w-full text-white font-semibold py-3 rounded flex items-center justify-center gap-2 transition-opacity hover:opacity-85"
+              style={{ background: '#25D366' }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +88,8 @@ export default function CartDrawer() {
             </button>
             <button
               onClick={clearCart}
-              className="w-full text-[#6b7280] hover:text-red-400 text-sm transition-colors"
+              className="w-full text-sm transition-colors hover:text-red-400"
+              style={{ color: 'var(--text-muted)' }}
             >
               Limpar carrinho
             </button>

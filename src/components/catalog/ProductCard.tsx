@@ -33,9 +33,10 @@ export default function ProductCard({ product }: Props) {
   return (
     <Link
       href={`/produto/${product.id}`}
-      className="group block bg-[#141414] border border-[#2a2a2a] rounded-xl overflow-hidden hover:border-[#C9A84C]/50 transition-all duration-200 hover:shadow-lg hover:shadow-[#C9A84C]/5"
+      className="product-card group block rounded-xl overflow-hidden border transition-all duration-200"
+      style={{ background: 'var(--bg-card)', borderColor: 'var(--border)' }}
     >
-      <div className="relative aspect-square bg-[#1a1a1a]">
+      <div className="relative aspect-square" style={{ background: 'var(--bg-card-2)' }}>
         {image ? (
           <Image
             src={image}
@@ -44,24 +45,34 @@ export default function ProductCard({ product }: Props) {
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-[#6b7280] text-sm">
-            Sem foto
+          <div className="w-full h-full flex flex-col items-center justify-center gap-2">
+            <svg width="32" height="40" viewBox="0 0 18 24" fill="none" style={{ opacity: 0.2 }}>
+              <path d="M5.5 2L9 7.5" stroke="var(--gold)" strokeWidth="1.6" strokeLinecap="round" />
+              <path d="M12.5 2L9 7.5" stroke="var(--gold)" strokeWidth="1.6" strokeLinecap="round" />
+              <ellipse cx="9" cy="9.2" rx="2.3" ry="1.8" fill="var(--gold)" />
+              <path d="M6.7 10.8L5.2 23L9 25L12.8 23L11.3 10.8Z" fill="var(--gold)" />
+            </svg>
+            <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Sem foto</span>
           </div>
         )}
       </div>
 
       <div className="p-4">
-        <h3 className="text-white font-medium text-sm leading-snug line-clamp-2 mb-2">
+        <h3
+          className="font-medium text-sm leading-snug line-clamp-2 mb-3"
+          style={{ color: 'var(--text)' }}
+        >
           {product.name}
         </h3>
 
         <div className="flex items-center justify-between">
-          <span className="text-[#C9A84C] font-bold text-base">
+          <span className="font-bold text-base" style={{ color: 'var(--gold)' }}>
             R${product.price.toFixed(2).replace('.', ',')}
           </span>
           <button
             onClick={handleAddToCart}
-            className="flex items-center gap-1.5 bg-[#C9A84C] hover:bg-[#E2C87A] text-black text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors"
+            className="flex items-center gap-1.5 text-black text-xs font-semibold px-3 py-1.5 rounded transition-opacity hover:opacity-80"
+            style={{ background: 'var(--gold)' }}
           >
             <ShoppingCart size={13} />
             Adicionar
