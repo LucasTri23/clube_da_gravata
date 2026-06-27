@@ -6,6 +6,7 @@ const CATEGORIES = [
   { label: 'Todos', slug: '' },
   { label: 'Ternos', slug: 'ternos' },
   { label: 'Gravatas', slug: 'gravatas' },
+  { label: 'Infantil', slug: 'infantil' },
   { label: 'Camisas', slug: 'camisas' },
   { label: 'Prendedores', slug: 'prendedores' },
 ]
