@@ -89,7 +89,7 @@ export default function ProdutoPage() {
           Voltar ao catálogo
         </Link>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
           {/* Images */}
           <div>
             <div className="relative aspect-square rounded-xl overflow-hidden bg-[#141414] border border-[#2a2a2a]">

@@ -90,7 +90,7 @@ export default function ProductForm({ initialData, mode }: Props) {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm text-[#6b7280] mb-1">Preço (R$) *</label>
           <input

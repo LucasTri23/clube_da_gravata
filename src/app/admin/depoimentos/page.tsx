@@ -18,7 +18,7 @@ export default async function AdminDepoimentosPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between flex-wrap gap-3 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-white">Depoimentos</h1>
           <p className="text-[#6b7280] text-sm mt-1">{testimonials.length} depoimento(s)</p>

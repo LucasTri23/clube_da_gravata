@@ -18,12 +18,12 @@ export default async function AdminProdutosPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between flex-wrap gap-3 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-white">Produtos</h1>
           <p className="text-[#6b7280] text-sm mt-1">{products.length} produto(s)</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 flex-wrap">
           <Link
             href="/admin/importar-pdf"
             className="bg-[#141414] border border-[#2a2a2a] hover:border-[#C9A84C] text-[#e0e0e0] font-semibold px-4 py-2 rounded-lg text-sm transition-colors"
