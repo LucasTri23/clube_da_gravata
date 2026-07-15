@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
@@ -34,6 +35,20 @@ export default async function HomePage() {
 
       {/* Hero */}
       <section className="relative overflow-hidden" style={{ background: 'var(--bg)' }}>
+        <Image
+          src="/hero-bg.png"
+          alt=""
+          fill
+          priority
+          className="object-cover object-[80%_15%]"
+        />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(90deg, var(--bg) 0%, var(--bg) 38%, transparent 78%), linear-gradient(0deg, var(--bg) 0%, transparent 35%)',
+          }}
+        />
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
