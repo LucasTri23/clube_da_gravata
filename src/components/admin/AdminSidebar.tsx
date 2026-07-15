@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   Package,
   FileUp,
+  Quote,
   LogOut,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase-client'
@@ -13,6 +14,7 @@ import { createClient } from '@/lib/supabase-client'
 const NAV = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/produtos', label: 'Produtos', icon: Package },
+  { href: '/admin/depoimentos', label: 'Depoimentos', icon: Quote },
   { href: '/admin/importar-pdf', label: 'Importar PDF', icon: FileUp },
 ]
 

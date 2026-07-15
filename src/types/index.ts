@@ -19,6 +19,17 @@ export interface Product {
   category?: Category
 }
 
+export interface Testimonial {
+  id: string
+  client_name: string
+  feedback: string
+  photo_url: string | null
+  order_index: number
+  active: boolean
+  created_at: string
+  updated_at: string
+}
+
 export interface CartItem {
   id: string
   name: string
