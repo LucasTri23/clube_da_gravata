@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr'
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 
 export async function createClient() {
@@ -22,6 +23,11 @@ export async function createClient() {
       },
     }
   )
+}
+
+export async function isAdmin(supabase: SupabaseClient): Promise<boolean> {
+  const { data } = await supabase.rpc('is_admin')
+  return data === true
 }
 
 export async function createAdminClient() {

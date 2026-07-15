@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase-server'
+import { createClient, isAdmin } from '@/lib/supabase-server'
 import AdminSidebar from '@/components/admin/AdminSidebar'
 
 export default async function AdminLayout({
@@ -13,6 +13,10 @@ export default async function AdminLayout({
   } = await supabase.auth.getUser()
 
   if (!user) {
+    redirect('/login')
+  }
+
+  if (!(await isAdmin(supabase))) {
     redirect('/login')
   }
 

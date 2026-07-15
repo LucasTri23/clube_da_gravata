@@ -13,7 +13,11 @@ import { readdir, readFile } from 'fs/promises'
 import path from 'path'
 
 const SUPABASE_URL = 'https://jfayxhqgntipfwbfusfw.supabase.co'
-const SERVICE_ROLE_KEY = 'sb_secret_d7_GOxTA-32YIqkOqmRxsg_t5aVL3RJ'
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+if (!SERVICE_ROLE_KEY) {
+  console.error('Defina SUPABASE_SERVICE_ROLE_KEY (ex: node --env-file=.env scripts/import-images.mjs)')
+  process.exit(1)
+}
 const BUCKET = 'product-images'
 
 async function apiJSON(apiPath, options = {}) {
