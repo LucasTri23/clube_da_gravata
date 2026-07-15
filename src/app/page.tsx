@@ -45,90 +45,68 @@ export default async function HomePage() {
       <Navbar />
 
       {/* Hero */}
-      <section className="relative overflow-hidden" style={{ background: 'var(--bg)' }}>
+      <section className="relative overflow-hidden">
+        <Image
+          src="/hero-bg.png"
+          alt="Cliente Clube da Gravata"
+          fill
+          priority
+          className="object-cover object-[50%_8%]"
+        />
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              'radial-gradient(ellipse 70% 60% at 20% 40%, var(--hero-glow), transparent)',
+              'linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.25) 35%, rgba(0,0,0,0.65) 100%)',
           }}
         />
-        <div className="max-w-7xl mx-auto px-4 pt-16 pb-16 md:pt-24 md:pb-24 relative">
-          <div className="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
-            <div>
-              <div className="flex items-center gap-4 mb-8">
-                <div className="h-px w-10" style={{ background: 'var(--gold)' }} />
-                <p
-                  className="text-xs font-semibold tracking-[0.35em] uppercase"
-                  style={{ color: 'var(--gold)' }}
-                >
-                  Moda Masculina Premium
-                </p>
-              </div>
+        <div className="max-w-7xl mx-auto px-4 pt-20 pb-24 md:pt-32 md:pb-44 relative">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="h-px w-10" style={{ background: '#C9A84C' }} />
+            <p className="text-xs font-semibold tracking-[0.35em] uppercase" style={{ color: '#C9A84C' }}>
+              Moda Masculina Premium
+            </p>
+          </div>
 
-              <h1
-                className="text-5xl md:text-6xl font-bold leading-[1.04] mb-7"
-                style={{ color: 'var(--text)' }}
-              >
-                Vista-se com<br />
-                <span style={{ color: 'var(--gold)' }}>elegância.</span>
-              </h1>
+          <h1
+            className="text-5xl md:text-7xl font-bold leading-[1.04] mb-7 text-white"
+            style={{ textShadow: '0 2px 16px rgba(0,0,0,0.5)' }}
+          >
+            Vista-se com<br />
+            <span style={{ color: '#E2C87A' }}>elegância.</span>
+          </h1>
 
-              <p className="text-lg mb-10 max-w-lg leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-                Ternos, gravatas e acessórios de alta qualidade para o homem que valoriza cada detalhe.
-                Enviamos para todo o Brasil.
-              </p>
+          <p
+            className="text-lg mb-10 max-w-lg leading-relaxed text-gray-200"
+            style={{ textShadow: '0 1px 8px rgba(0,0,0,0.5)' }}
+          >
+            Ternos, gravatas e acessórios de alta qualidade para o homem que valoriza cada detalhe.
+            Enviamos para todo o Brasil.
+          </p>
 
-              <div className="flex gap-4 flex-wrap">
-                <Link
-                  href="/catalogo"
-                  className="font-bold px-8 py-3.5 rounded text-sm tracking-wide transition-opacity hover:opacity-85"
-                  style={{ background: 'var(--gold)', color: '#000' }}
-                >
-                  Ver Catálogo
-                </Link>
-                <a
-                  href="https://wa.me/5531995463588"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-semibold px-8 py-3.5 rounded text-sm tracking-wide border transition-opacity hover:opacity-75"
-                  style={{ borderColor: 'var(--gold)', color: 'var(--gold)' }}
-                >
-                  Falar no WhatsApp
-                </a>
-              </div>
-            </div>
-
-            <div className="relative">
-              <div
-                className="relative aspect-[4/5] md:aspect-[3/4] rounded-2xl overflow-hidden border"
-                style={{ borderColor: 'var(--border-gold)' }}
-              >
-                <Image
-                  src="/hero-bg.png"
-                  alt="Cliente Clube da Gravata"
-                  fill
-                  priority
-                  className="object-cover object-[75%_15%]"
-                />
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background: 'linear-gradient(0deg, var(--bg) 0%, transparent 25%)',
-                  }}
-                />
-              </div>
-              <div
-                className="absolute -bottom-4 -left-4 h-24 w-24 rounded-2xl -z-10"
-                style={{ background: 'var(--hero-glow)' }}
-              />
-            </div>
+          <div className="flex gap-4 flex-wrap">
+            <Link
+              href="/catalogo"
+              className="font-bold px-8 py-3.5 rounded text-sm tracking-wide transition-opacity hover:opacity-85"
+              style={{ background: '#C9A84C', color: '#000' }}
+            >
+              Ver Catálogo
+            </Link>
+            <a
+              href="https://wa.me/5531995463588"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold px-8 py-3.5 rounded text-sm tracking-wide border-2 transition-opacity hover:opacity-75 text-white"
+              style={{ borderColor: '#E2C87A' }}
+            >
+              Falar no WhatsApp
+            </a>
           </div>
         </div>
 
         <div
-          className="h-px max-w-7xl mx-auto"
-          style={{ background: 'linear-gradient(90deg, var(--gold) 0%, transparent 60%)' }}
+          className="h-px max-w-7xl mx-auto relative"
+          style={{ background: 'linear-gradient(90deg, #C9A84C 0%, transparent 60%)' }}
         />
       </section>
 
