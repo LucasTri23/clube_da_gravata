@@ -24,3 +24,8 @@ export function buildWhatsAppCheckoutURL(items: CartItem[]): string {
 export function buildWhatsAppSupportURL(): string {
   return `https://wa.me/${PHONE}?text=${encodeURIComponent('Olá! Gostaria de tirar uma dúvida sobre os produtos do Clube da Gravata.')}`
 }
+
+export function buildWhatsAppProductURL(product: { name: string; price: number }): string {
+  const text = `Olá! Tenho interesse neste produto do Clube da Gravata:\n\n*${product.name}*\nR$${product.price.toFixed(2).replace('.', ',')}`
+  return `https://wa.me/${PHONE}?text=${encodeURIComponent(text)}`
+}
