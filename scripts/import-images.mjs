@@ -11,10 +11,18 @@
 
 import { readdir, readFile } from 'fs/promises'
 import path from 'path'
+import { fileURLToPath } from 'url'
+import { config } from 'dotenv'
+config({ path: fileURLToPath(new URL('../.env.local', import.meta.url)) })
 
-const SUPABASE_URL = 'https://jfayxhqgntipfwbfusfw.supabase.co'
-const SERVICE_ROLE_KEY = 'sb_secret_d7_GOxTA-32YIqkOqmRxsg_t5aVL3RJ'
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 const BUCKET = 'product-images'
+
+if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
+  console.error('Faltam variáveis no .env.local: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY')
+  process.exit(1)
+}
 
 async function apiJSON(apiPath, options = {}) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${apiPath}`, {

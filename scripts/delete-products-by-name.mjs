@@ -1,5 +1,5 @@
-// Apaga TODOS os produtos do banco antes de reimportar com fotos
-// Execute: node scripts/delete-all-products.mjs
+// Apaga produtos cujo nome bate com um padrão (ilike), antes de reimportar uma linha de catálogo
+// Execute: node scripts/delete-products-by-name.mjs "Poliviscose"
 
 import { fileURLToPath } from 'url'
 import { config } from 'dotenv'
@@ -30,12 +30,25 @@ async function api(path, options = {}) {
 }
 
 async function main() {
-  const count = await api('products?select=id')
-  console.log(`Encontrados ${count.length} produtos. Apagando...`)
-  await api('products?id=neq.00000000-0000-0000-0000-000000000000', { method: 'DELETE' })
-  const after = await api('products?select=id')
-  console.log(`Produtos restantes: ${after.length}`)
-  console.log('Pronto! Agora rode os scripts de importação com PDF.')
+  const term = process.argv[2]
+  if (!term) {
+    console.error('Uso: node scripts/delete-products-by-name.mjs "<termo>"')
+    process.exit(1)
+  }
+
+  const pattern = `*${term}*`
+  const found = await api(`products?select=id,name&name=ilike.${encodeURIComponent(pattern)}`)
+  console.log(`Encontrados ${found.length} produtos contendo "${term}":`)
+  found.forEach(p => console.log(`  - ${p.name}`))
+
+  if (found.length === 0) {
+    console.log('Nada para apagar.')
+    return
+  }
+
+  await api(`products?name=ilike.${encodeURIComponent(pattern)}`, { method: 'DELETE' })
+  const after = await api(`products?select=id&name=ilike.${encodeURIComponent(pattern)}`)
+  console.log(`\nApagados. Restantes com "${term}": ${after.length}`)
 }
 
 main().catch(err => { console.error(err.message); process.exit(1) })
