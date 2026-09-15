@@ -3,6 +3,7 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import CategoryFilter from '@/components/catalog/CategoryFilter'
 import CatalogClient from '@/components/catalog/CatalogClient'
+import SearchBar from '@/components/catalog/SearchBar'
 import { createClient } from '@/lib/supabase-server'
 import { Product } from '@/types'
 
@@ -43,12 +44,22 @@ export default async function CatalogoPage({ searchParams }: Props) {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <main className="flex-1 max-w-7xl mx-auto px-4 py-10 w-full">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--text)' }}>
-            {categoria
-              ? categoria.charAt(0).toUpperCase() + categoria.slice(1)
-              : 'Catálogo'}
-          </h1>
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-3xl font-bold mb-1" style={{ color: 'var(--text)' }}>
+              {categoria
+                ? categoria.charAt(0).toUpperCase() + categoria.slice(1)
+                : 'Catálogo'}
+            </h1>
+            {q && (
+              <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+                Resultados para &ldquo;{q}&rdquo;
+              </p>
+            )}
+          </div>
+          <Suspense>
+            <SearchBar />
+          </Suspense>
         </div>
 
         <div className="mb-6">

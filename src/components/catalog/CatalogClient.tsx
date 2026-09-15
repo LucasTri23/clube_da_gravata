@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { SlidersHorizontal, X, PackageSearch } from 'lucide-react'
 import ProductCard from './ProductCard'
 import { Product } from '@/types'
 
@@ -11,7 +12,7 @@ interface Props {
 }
 
 function extractTipo(name: string): string {
-  const m = name.match(/^Terno (Microfibra|Poliviscose|Elastomultiéster)/)
+  const m = name.match(/^Terno (Microfibra|Poliviscose|Elastomultiéster|Rochester|Fio Indiano)/)
   return m?.[1] ?? ''
 }
 
@@ -23,7 +24,7 @@ function extractCor(name: string): string {
 
 function extractSizes(description: string | null): string[] {
   if (!description) return []
-  const m = description.match(/Tamanhos[^:]*:\s*([^|]+)/)
+  const m = description.match(/Tamanhos?[^:]*:\s*([^|]+)/)
   if (!m) return []
   const out: string[] = []
   for (const part of m[1].trim().split('/')) {
@@ -103,7 +104,21 @@ export default function CatalogClient({ products, categoria }: Props) {
     return true
   }), [products, tipo, tamanho, cor, modelo, preco, isTernos, isGravatas])
 
-  const hasFilters = !!(tipo || tamanho || cor || modelo || preco)
+  const activeChips = useMemo(() => {
+    const chips: { key: string; label: string }[] = []
+    if (isTernos) {
+      if (tipo) chips.push({ key: 'tipo', label: `Tipo: ${tipo}` })
+      if (tamanho) chips.push({ key: 'tamanho', label: `Tamanho: ${tamanho}` })
+      if (cor) chips.push({ key: 'cor', label: `Cor: ${cor}` })
+    }
+    if (isGravatas) {
+      if (modelo) chips.push({ key: 'modelo', label: `Tipo: ${modelo}` })
+      if (preco) chips.push({ key: 'preco', label: `Preço: R$ ${parseFloat(preco).toFixed(2).replace('.', ',')}` })
+    }
+    return chips
+  }, [isTernos, isGravatas, tipo, tamanho, cor, modelo, preco])
+
+  const hasFilters = activeChips.length > 0
 
   function clearFilters() {
     const params = new URLSearchParams(searchParams.toString())
@@ -115,34 +130,60 @@ export default function CatalogClient({ products, categoria }: Props) {
   return (
     <>
       {(isTernos || isGravatas) && (
-        <div className="flex items-center gap-3 flex-wrap mb-6">
-          {isTernos && (
-            <>
-              <FilterSelect label="Tipo" value={tipo} onChange={v => setFilter('tipo', v)} options={tipos} />
-              <FilterSelect label="Tamanho" value={tamanho} onChange={v => setFilter('tamanho', v)} options={tamanhos} />
-              <FilterSelect label="Cor" value={cor} onChange={v => setFilter('cor', v)} options={cores} />
-            </>
-          )}
-          {isGravatas && (
-            <>
-              <FilterSelect label="Modelo" value={modelo} onChange={v => setFilter('modelo', v)} options={modelos} />
-              <FilterSelect
-                label="Preço"
-                value={preco}
-                onChange={v => setFilter('preco', v)}
-                options={precos.map(String)}
-                formatLabel={v => `R$ ${parseFloat(v).toFixed(2).replace('.', ',')}`}
-              />
-            </>
-          )}
+        <div
+          className="rounded-xl border p-4 mb-6"
+          style={{ background: 'var(--bg-card)', borderColor: 'var(--border)' }}
+        >
+          <div className="flex items-center gap-2 mb-3">
+            <SlidersHorizontal size={16} style={{ color: 'var(--gold)' }} />
+            <span className="text-sm font-semibold" style={{ color: 'var(--text)' }}>
+              Filtrar produtos
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3 flex-wrap">
+            {isTernos && (
+              <>
+                <FilterSelect label="Tipo" value={tipo} onChange={v => setFilter('tipo', v)} options={tipos} />
+                <FilterSelect label="Tamanho" value={tamanho} onChange={v => setFilter('tamanho', v)} options={tamanhos} />
+                <FilterSelect label="Cor" value={cor} onChange={v => setFilter('cor', v)} options={cores} />
+              </>
+            )}
+            {isGravatas && (
+              <>
+                <FilterSelect label="Tipo" value={modelo} onChange={v => setFilter('modelo', v)} options={modelos} />
+                <FilterSelect
+                  label="Preço"
+                  value={preco}
+                  onChange={v => setFilter('preco', v)}
+                  options={precos.map(String)}
+                  formatLabel={v => `R$ ${parseFloat(v).toFixed(2).replace('.', ',')}`}
+                />
+              </>
+            )}
+          </div>
+
           {hasFilters && (
-            <button
-              onClick={clearFilters}
-              className="text-sm px-2 hover:underline"
-              style={{ color: 'var(--gold)' }}
-            >
-              Limpar filtros
-            </button>
+            <div className="flex items-center gap-2 flex-wrap mt-3 pt-3 border-t" style={{ borderColor: 'var(--border)' }}>
+              {activeChips.map(chip => (
+                <button
+                  key={chip.key}
+                  onClick={() => setFilter(chip.key, '')}
+                  className="flex items-center gap-1.5 text-xs font-medium pl-3 pr-2 py-1.5 rounded-full border transition-colors"
+                  style={{ background: 'var(--bg-card-2)', borderColor: 'var(--border-gold)', color: 'var(--gold)' }}
+                >
+                  {chip.label}
+                  <X size={12} />
+                </button>
+              ))}
+              <button
+                onClick={clearFilters}
+                className="text-xs px-2 py-1.5 hover:underline"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                Limpar tudo
+              </button>
+            </div>
           )}
         </div>
       )}
@@ -152,8 +193,18 @@ export default function CatalogClient({ products, categoria }: Props) {
       </p>
 
       {filtered.length === 0 ? (
-        <div className="text-center py-24">
+        <div className="flex flex-col items-center justify-center gap-3 text-center py-24">
+          <PackageSearch size={40} style={{ color: 'var(--text-muted)', opacity: 0.6 }} />
           <p className="text-lg" style={{ color: 'var(--text-muted)' }}>Nenhum produto encontrado.</p>
+          {hasFilters && (
+            <button
+              onClick={clearFilters}
+              className="text-sm px-4 py-2 rounded-lg border transition-colors"
+              style={{ borderColor: 'var(--gold)', color: 'var(--gold)' }}
+            >
+              Limpar filtros
+            </button>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -181,7 +232,7 @@ function FilterSelect({
       onChange={e => onChange(e.target.value)}
       className="flex-1 min-w-[130px] sm:flex-none sm:min-w-0 px-3 py-2.5 sm:py-2 rounded-lg text-sm border transition-colors cursor-pointer"
       style={{
-        background: 'var(--bg-card)',
+        background: 'var(--bg-card-2)',
         borderColor: value ? 'var(--gold)' : 'var(--border)',
         color: value ? 'var(--gold)' : 'var(--text)',
       }}
