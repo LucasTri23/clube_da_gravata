@@ -57,7 +57,9 @@ export default async function CatalogoPage({ searchParams }: Props) {
           </Suspense>
         </div>
 
-        <CatalogClient products={products} categoria={categoria ?? ''} />
+        <Suspense>
+          <CatalogClient products={products} categoria={categoria ?? ''} />
+        </Suspense>
       </main>
       <Footer />
     </div>

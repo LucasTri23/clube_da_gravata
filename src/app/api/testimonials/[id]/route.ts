@@ -8,8 +8,8 @@ export async function GET(
   const { id } = await params
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('products')
-    .select('*, category:categories(id,name,slug,order_index)')
+    .from('testimonials')
+    .select('*')
     .eq('id', id)
     .single()
 
@@ -30,28 +30,19 @@ export async function PATCH(
   if (!(await isAdmin(supabase))) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
   const body = await req.json()
-  const { name, description, price, category_slug, images, active } = body
+  const { client_name, feedback, photo_url, order_index, active } = body
 
   const updates: Record<string, unknown> = {
     updated_at: new Date().toISOString(),
   }
-  if (name !== undefined) updates.name = name
-  if (description !== undefined) updates.description = description
-  if (price !== undefined) updates.price = price
-  if (images !== undefined) updates.images = images
+  if (client_name !== undefined) updates.client_name = client_name
+  if (feedback !== undefined) updates.feedback = feedback
+  if (photo_url !== undefined) updates.photo_url = photo_url || null
+  if (order_index !== undefined) updates.order_index = order_index
   if (active !== undefined) updates.active = active
 
-  if (category_slug) {
-    const { data: category } = await supabase
-      .from('categories')
-      .select('id')
-      .eq('slug', category_slug)
-      .single()
-    if (category) updates.category_id = category.id
-  }
-
   const { data, error } = await supabase
-    .from('products')
+    .from('testimonials')
     .update(updates)
     .eq('id', id)
     .select()
@@ -73,7 +64,7 @@ export async function DELETE(
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   if (!(await isAdmin(supabase))) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-  const { error } = await supabase.from('products').delete().eq('id', id)
+  const { error } = await supabase.from('testimonials').delete().eq('id', id)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json({ ok: true })
 }

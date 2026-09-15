@@ -9,6 +9,7 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { useCart } from '@/contexts/CartContext'
 import { createClient } from '@/lib/supabase-client'
+import { buildWhatsAppProductURL } from '@/lib/whatsapp'
 import { Product } from '@/types'
 
 export default function ProdutoPage() {
@@ -89,7 +90,7 @@ export default function ProdutoPage() {
           Voltar ao catálogo
         </Link>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
           {/* Images */}
           <div>
             <div className="relative aspect-square rounded-xl overflow-hidden bg-[#141414] border border-[#2a2a2a]">
@@ -193,7 +194,7 @@ export default function ProdutoPage() {
               <p className="text-[#6b7280] text-sm">
                 💬 Dúvidas sobre o produto?{' '}
                 <a
-                  href="https://wa.me/5531995463588"
+                  href={buildWhatsAppProductURL(product)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#C9A84C] hover:underline"

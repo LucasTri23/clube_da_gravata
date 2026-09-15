@@ -1,9 +1,10 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import ProductCard from '@/components/catalog/ProductCard'
 import { createClient } from '@/lib/supabase-server'
-import { Product } from '@/types'
+import { Product, Testimonial } from '@/types'
 
 const CATEGORIES = [
   { slug: 'ternos', label: 'Ternos', desc: 'Do clássico ao contemporâneo' },
@@ -25,42 +26,60 @@ async function getFeaturedProducts(): Promise<Product[]> {
   return (data as Product[]) ?? []
 }
 
+async function getTestimonials(): Promise<Testimonial[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('testimonials')
+    .select('*')
+    .eq('active', true)
+    .order('order_index', { ascending: true })
+  return (data as Testimonial[]) ?? []
+}
+
 export default async function HomePage() {
   const featured = await getFeaturedProducts()
+  const testimonials = await getTestimonials()
 
   return (
     <div className="flex flex-col min-h-screen" style={{ background: 'var(--bg)' }}>
       <Navbar />
 
       {/* Hero */}
-      <section className="relative overflow-hidden" style={{ background: 'var(--bg)' }}>
+      <section className="relative overflow-hidden">
+        <Image
+          src="/hero-bg.png"
+          alt="Cliente Clube da Gravata"
+          fill
+          priority
+          className="object-cover object-[50%_8%]"
+        />
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              'radial-gradient(ellipse 70% 60% at 20% 60%, var(--hero-glow), transparent)',
+              'linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.25) 35%, rgba(0,0,0,0.65) 100%)',
           }}
         />
         <div className="max-w-7xl mx-auto px-4 pt-20 pb-24 md:pt-32 md:pb-44 relative">
           <div className="flex items-center gap-4 mb-8">
-            <div className="h-px w-10" style={{ background: 'var(--gold)' }} />
-            <p
-              className="text-xs font-semibold tracking-[0.35em] uppercase"
-              style={{ color: 'var(--gold)' }}
-            >
+            <div className="h-px w-10" style={{ background: '#C9A84C' }} />
+            <p className="text-xs font-semibold tracking-[0.35em] uppercase" style={{ color: '#C9A84C' }}>
               Moda Masculina Premium
             </p>
           </div>
 
           <h1
-            className="text-5xl md:text-7xl font-bold leading-[1.04] mb-7"
-            style={{ color: 'var(--text)' }}
+            className="text-5xl md:text-7xl font-bold leading-[1.04] mb-7 text-white"
+            style={{ textShadow: '0 2px 16px rgba(0,0,0,0.5)' }}
           >
             Vista-se com<br />
-            <span style={{ color: 'var(--gold)' }}>elegância.</span>
+            <span style={{ color: '#E2C87A' }}>elegância.</span>
           </h1>
 
-          <p className="text-lg mb-10 max-w-lg leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+          <p
+            className="text-lg mb-10 max-w-lg leading-relaxed text-gray-200"
+            style={{ textShadow: '0 1px 8px rgba(0,0,0,0.5)' }}
+          >
             Ternos, gravatas e acessórios de alta qualidade para o homem que valoriza cada detalhe.
             Enviamos para todo o Brasil.
           </p>
@@ -69,7 +88,7 @@ export default async function HomePage() {
             <Link
               href="/catalogo"
               className="font-bold px-8 py-3.5 rounded text-sm tracking-wide transition-opacity hover:opacity-85"
-              style={{ background: 'var(--gold)', color: '#000' }}
+              style={{ background: '#C9A84C', color: '#000' }}
             >
               Ver Catálogo
             </Link>
@@ -77,8 +96,8 @@ export default async function HomePage() {
               href="https://wa.me/5531995463588"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-semibold px-8 py-3.5 rounded text-sm tracking-wide border transition-opacity hover:opacity-75"
-              style={{ borderColor: 'var(--gold)', color: 'var(--gold)' }}
+              className="font-semibold px-8 py-3.5 rounded text-sm tracking-wide border-2 transition-opacity hover:opacity-75 text-white"
+              style={{ borderColor: '#E2C87A' }}
             >
               Falar no WhatsApp
             </a>
@@ -86,8 +105,8 @@ export default async function HomePage() {
         </div>
 
         <div
-          className="h-px max-w-7xl mx-auto"
-          style={{ background: 'linear-gradient(90deg, var(--gold) 0%, transparent 60%)' }}
+          className="h-px max-w-7xl mx-auto relative"
+          style={{ background: 'linear-gradient(90deg, #C9A84C 0%, transparent 60%)' }}
         />
       </section>
 
@@ -147,6 +166,59 @@ export default async function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {featured.map(product => (
               <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Testimonials */}
+      {testimonials.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 pb-20">
+          <div className="flex items-center gap-5 mb-12">
+            <div className="h-px flex-1" style={{ background: 'var(--border)' }} />
+            <p className="text-xs font-semibold tracking-[0.3em] uppercase" style={{ color: 'var(--gold)' }}>
+              O Que Dizem Nossos Clientes
+            </p>
+            <div className="h-px flex-1" style={{ background: 'var(--border)' }} />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {testimonials.map(t => (
+              <div
+                key={t.id}
+                className="rounded-xl p-7 border"
+                style={{ background: 'var(--bg-card)', borderColor: 'var(--border)' }}
+              >
+                <p
+                  className="text-3xl font-serif leading-none mb-3"
+                  style={{ color: 'var(--gold)' }}
+                >
+                  &ldquo;
+                </p>
+                <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-sub)' }}>
+                  {t.feedback}
+                </p>
+                <div className="flex items-center gap-3">
+                  <div
+                    className="relative w-11 h-11 rounded-full overflow-hidden flex-shrink-0 border"
+                    style={{ borderColor: 'var(--border-gold)' }}
+                  >
+                    {t.photo_url ? (
+                      <Image src={t.photo_url} alt={t.client_name} fill className="object-cover" />
+                    ) : (
+                      <div
+                        className="w-full h-full flex items-center justify-center text-sm font-bold"
+                        style={{ background: 'var(--bg-card-2)', color: 'var(--gold)' }}
+                      >
+                        {t.client_name.charAt(0)}
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-sm font-semibold" style={{ color: 'var(--text)' }}>
+                    {t.client_name}
+                  </p>
+                </div>
+              </div>
             ))}
           </div>
         </section>

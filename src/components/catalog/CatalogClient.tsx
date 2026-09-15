@@ -1,6 +1,7 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import ProductCard from './ProductCard'
 import { Product } from '@/types'
 
@@ -49,11 +50,21 @@ function unique<T>(arr: T[]): T[] {
 }
 
 export default function CatalogClient({ products, categoria }: Props) {
-  const [tipo, setTipo] = useState('')
-  const [tamanho, setTamanho] = useState('')
-  const [cor, setCor] = useState('')
-  const [modelo, setModelo] = useState('')
-  const [preco, setPreco] = useState('')
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const tipo = searchParams.get('tipo') ?? ''
+  const tamanho = searchParams.get('tamanho') ?? ''
+  const cor = searchParams.get('cor') ?? ''
+  const modelo = searchParams.get('modelo') ?? ''
+  const preco = searchParams.get('preco') ?? ''
+
+  function setFilter(key: string, value: string) {
+    const params = new URLSearchParams(searchParams.toString())
+    if (value) params.set(key, value)
+    else params.delete(key)
+    router.replace(`/catalogo?${params.toString()}`, { scroll: false })
+  }
 
   const isTernos = categoria === 'ternos'
   const isGravatas = categoria === 'gravatas'
@@ -95,8 +106,10 @@ export default function CatalogClient({ products, categoria }: Props) {
   const hasFilters = !!(tipo || tamanho || cor || modelo || preco)
 
   function clearFilters() {
-    setTipo(''); setTamanho(''); setCor('')
-    setModelo(''); setPreco('')
+    const params = new URLSearchParams(searchParams.toString())
+    params.delete('tipo'); params.delete('tamanho'); params.delete('cor')
+    params.delete('modelo'); params.delete('preco')
+    router.replace(`/catalogo?${params.toString()}`, { scroll: false })
   }
 
   return (
@@ -105,18 +118,18 @@ export default function CatalogClient({ products, categoria }: Props) {
         <div className="flex items-center gap-3 flex-wrap mb-6">
           {isTernos && (
             <>
-              <FilterSelect label="Tipo" value={tipo} onChange={setTipo} options={tipos} />
-              <FilterSelect label="Tamanho" value={tamanho} onChange={setTamanho} options={tamanhos} />
-              <FilterSelect label="Cor" value={cor} onChange={setCor} options={cores} />
+              <FilterSelect label="Tipo" value={tipo} onChange={v => setFilter('tipo', v)} options={tipos} />
+              <FilterSelect label="Tamanho" value={tamanho} onChange={v => setFilter('tamanho', v)} options={tamanhos} />
+              <FilterSelect label="Cor" value={cor} onChange={v => setFilter('cor', v)} options={cores} />
             </>
           )}
           {isGravatas && (
             <>
-              <FilterSelect label="Modelo" value={modelo} onChange={setModelo} options={modelos} />
+              <FilterSelect label="Modelo" value={modelo} onChange={v => setFilter('modelo', v)} options={modelos} />
               <FilterSelect
                 label="Preço"
                 value={preco}
-                onChange={setPreco}
+                onChange={v => setFilter('preco', v)}
                 options={precos.map(String)}
                 formatLabel={v => `R$ ${parseFloat(v).toFixed(2).replace('.', ',')}`}
               />
@@ -166,7 +179,7 @@ function FilterSelect({
     <select
       value={value}
       onChange={e => onChange(e.target.value)}
-      className="px-3 py-2 rounded-lg text-sm border transition-colors cursor-pointer"
+      className="flex-1 min-w-[130px] sm:flex-none sm:min-w-0 px-3 py-2.5 sm:py-2 rounded-lg text-sm border transition-colors cursor-pointer"
       style={{
         background: 'var(--bg-card)',
         borderColor: value ? 'var(--gold)' : 'var(--border)',

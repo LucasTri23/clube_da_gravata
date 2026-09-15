@@ -29,22 +29,28 @@ if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
 
 // ── MAPEAMENTOS: página do PDF → produto ─────────────────────────────────────
 const CATALOGS = {
+  // Catálogo "ELASTOMULTIESTER 20-07.pdf" — transcrito manualmente das 14 páginas.
+  // Todas as páginas trazem selo de tamanhos + código de produto próprio, ou
+  // seja, todas as 14 são produtos distintos (nenhuma foto extra/null).
   elastomultiester: {
     category: 'ternos',
+    namePattern: 'Elastomultiéster', // usado para apagar produtos antigos deste catálogo antes de reimportar
     // null = foto extra do produto anterior (ambas vão pro mesmo produto)
     pages: [
-      { name: 'Terno Primefit Elastomultiéster - Homus 3417',       desc: 'Tamanhos: 44/46/60/62 | Antuérpia Prime Regulagem Fosco | Coleção Estação Real' },
-      { name: 'Terno Primefit Elastomultiéster - Marinho 3414',     desc: 'Tamanhos: 42/46/60/66 | Antuérpia Prime Regulagem Fosco | Coleção Estação Real' },
-      { name: 'Terno Primefit Elastomultiéster - Cinza Médio 3411', desc: 'Tamanhos: 44/64/66 | Antuérpia Prime Regulagem Fosco | Coleção Estação Real' },
-      { name: 'Terno Primefit Elastomultiéster - Preto 3405',       desc: 'Tamanhos: 64 | Antuérpia Prime Regulagem Fosco | Coleção Estação Real' },
-      { name: 'Terno Elastomultiéster Prime Fosco - Homus 4164',    desc: 'Tamanhos: 42 ao 66 | Via do Terno' },
-      { name: 'Terno Elastomultiéster Prime Fosco - Militar 4170',  desc: 'Tamanhos: 42 ao 66 | Meridian Collection | Via do Terno' },
-      { name: 'Terno Elastomultiéster Prime Fosco - Marinho 4161',  desc: 'Tamanhos: 42 ao 66 | Via do Terno' },
-      { name: 'Terno Elastomultiéster Prime Fosco - Chocolate 4167',desc: 'Tamanhos: 42/44/46/48/54/56/58/60 | Meridian Collection | Via do Terno' },
-      { name: 'Terno Elastomultiéster Prime Fosco - Cinza 4158',    desc: 'Tamanhos: 44/46/48/52/54/56/58/60/62/66 | Via do Terno' },
-      { name: 'Terno Elastomultiéster Prime Fosco - Chumbo 4155',   desc: 'Tamanhos: 42 ao 66 | Via do Terno' },
-      null, // página 11 = foto extra do Chumbo 4155
-      { name: 'Terno Elastomultiéster Prime Fosco - Preto 4152',    desc: 'Tamanhos: 42/44/48/50/52/54/56/58/62/64/66 | Via do Terno' },
+      { name: 'Terno Elastomultiéster Antuérpia Prime Regulagem Fosco - Homus 3417',       desc: 'Tamanhos disponíveis: 44/46/60/62 | Coleção Estação Real | Via do Terno' },
+      { name: 'Terno Elastomultiéster Antuérpia Prime Regulagem Fosco - Marinho 3414',     desc: 'Tamanhos disponíveis: 42/46/60/66 | Coleção Estação Real | Via do Terno' },
+      { name: 'Terno Elastomultiéster Antuérpia Prime Regulagem Fosco - Cinza Médio 3411', desc: 'Tamanhos disponíveis: 64/66 | Coleção Estação Real | Via do Terno' },
+      { name: 'Terno Elastomultiéster Antuérpia Prime Regulagem Fosco - Preto 3405',       desc: 'Tamanhos disponíveis: 64 | Via do Terno' },
+      { name: 'Terno Elastomultiéster Prime Fosco - Preto 4152',       desc: 'Tamanhos disponíveis: 42/44/48/58/60/62/64/66 | Via do Terno' },
+      { name: 'Terno Elastomultiéster Prime Fosco - Cinza 4158',       desc: 'Tamanhos disponíveis: 44/48/54/56/58/60/62/66 | Via do Terno' },
+      { name: 'Terno Elastomultiéster Prime Fosco - Chocolate 4359',   desc: 'Tamanhos disponíveis: 42/44/62/64/66 | Via do Terno' },
+      { name: 'Terno Elastomultiéster Prime Fosco - Militar 4362',     desc: 'Tamanhos disponíveis: 42/44/50/52/54/56/58/60/64/66 | Via do Terno' },
+      { name: 'Terno Elastomultiéster Prime Fosco - Homus 4356',       desc: 'Tamanhos disponíveis: 42/44/46/50 ao 66 | Via do Terno' },
+      { name: 'Terno Elastomultiéster Prime Fosco - Homus 4164',       desc: 'Tamanhos disponíveis: 42/44/46/50/52/58/60 | Via do Terno' },
+      { name: 'Terno Elastomultiéster Prime Fosco - Cinza Médio 4350', desc: 'Tamanhos disponíveis: 42 ao 64 | Via do Terno' },
+      { name: 'Terno Elastomultiéster Prime Fosco - Chumbo 4347',      desc: 'Tamanhos disponíveis: 42 ao 66 | Via do Terno' },
+      { name: 'Terno Elastomultiéster Prime Fosco - Chumbo 4155',      desc: 'Tamanhos disponíveis: 42 ao 66 | Via do Terno' },
+      { name: 'Terno Elastomultiéster Prime Fosco - Preto 4344',       desc: 'Tamanhos disponíveis: 42/44/46/50/52/54/56/60/62/64/66 | Via do Terno' },
     ],
   },
 
@@ -65,93 +71,101 @@ const CATALOGS = {
     ],
   },
 
+  // Catálogo "MICROFIBRA 23-07.pdf" — transcrito manualmente das 77 páginas.
+  // Páginas 58 e 69 são fotos extras de um produto já visto (mesmo código), por
+  // isso viram `null` (foto extra, ver lógica de pendingImages abaixo).
   microfibra: {
     category: 'ternos',
+    namePattern: 'Microfibra',
     pages: [
-      { name: 'Terno Microfibra Stretch Liso - Branco 3655',              desc: 'Tamanhos disponíveis: 42/52/56 ao 62 | Via do Terno' },
-      { name: 'Terno Microfibra Stretch Liso - Branco 3589',              desc: 'Tamanhos disponíveis: 44/58/60 | Via do Terno' },
-      { name: 'Terno Microfibra Stretch Liso - Cinza 1313',               desc: 'Tamanhos disponíveis: 44/58/60 | Via do Terno' },
-      { name: 'Terno Microfibra Stretch Liso - Asphalt 3761',             desc: 'Tamanhos disponíveis: 42 ao 66 | Via do Terno' },
-      { name: 'Terno Microfibra Stretch Liso - Asphalt 3658',             desc: 'Tamanhos disponíveis: 42 ao 56/60 ao 66 | Via do Terno' },
-      { name: 'Terno Microfibra Stretch Liso - Asphalt 3580',             desc: 'Tamanhos disponíveis: 42 ao 46/58 ao 64 | Via do Terno' },
-      { name: 'Terno Microfibra Stretch Liso - Asphalt 2514',             desc: 'Tamanhos disponíveis: 42/44 | Via do Terno' },
-      { name: 'Terno Microfibra Stretch Liso - Preto 3770',               desc: 'Tamanhos disponíveis: 56/60 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Dark Blue 3677',            desc: 'Tamanhos disponíveis: 42/44/52/54/58 ao 62 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Blue 3604',                 desc: 'Tamanhos disponíveis: 44/60 ao 66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Navy 2824',                 desc: 'Tamanhos disponíveis: 42 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Azul 3437',                 desc: 'Tamanhos disponíveis: 44 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Azul 3306',                 desc: 'Tamanhos disponíveis: 44/66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Azul 3262',                 desc: 'Tamanhos disponíveis: 44/60 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Grafite 3431',              desc: 'Tamanhos disponíveis: 42/44/60 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Grafite 3198',              desc: 'Tamanhos disponíveis: 42/44 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Grafite 2690',              desc: 'Tamanhos disponíveis: 42 ao 46 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Cinza Claro MF 4424',       desc: 'Tamanhos disponíveis: 42/44/54 ao 66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Cinza 3683',                desc: 'Tamanhos disponíveis: 42/44/46 ao 66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Grafite 153012',            desc: 'Tamanhos disponíveis: 44/46 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Chumbo 3680',               desc: 'Tamanhos disponíveis: 42/44/48 ao 54/58/60/62/64 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Preto MF 1274',             desc: 'Tamanhos disponíveis: 42 ao 66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Black Jet 004015',          desc: 'Tamanhos disponíveis: 44/52/54/58 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Black Jet 3897',            desc: 'Tamanhos disponíveis: 62 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Black Jet 3674',            desc: 'Tamanhos disponíveis: 44/50 ao 64 | Via do Terno' },
-      { name: 'Terno Microfibra Padrao Liso - Black Jet 3979',            desc: 'Tamanhos disponíveis: 42 ao 60 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Preto 3607',                desc: 'Tamanhos disponíveis: 44/50/52/58/60/62 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Preto 3253',                desc: 'Tamanhos disponíveis: 52/60 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Xadrez - Marinho 2709',            desc: 'Tamanhos disponíveis: 42/44 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Xadrez - Chumbo 1944',             desc: 'Tamanhos disponíveis: 42/44/46 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Cinza Claro MF 4427',       desc: 'Tamanhos disponíveis: 42/50/56 ao 62/66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Bege 3191',                 desc: 'Tamanhos disponíveis: 42/62 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Melange - Bege 3562',              desc: 'Tamanhos disponíveis: 42/58 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Melange - Azul Índigo 3315',       desc: 'Tamanhos disponíveis: 62/66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Melange - Cinza 2809',             desc: 'Tamanhos disponíveis: 62 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Grafite 002718',            desc: 'Tamanhos disponíveis: 44 | Via do Terno' },
-      { name: 'Terno Microfibra Stretch Mescla - Preto 4454',             desc: 'Tamanhos disponíveis: 44 ao 66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Detalhado - Azul 004009',          desc: 'Tamanhos disponíveis: 42/58/62 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Detalhado - Azul 4415',            desc: 'Tamanhos disponíveis: 44/46/48/58 | Meridian Collection | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Detalhado - Chumbo 004460',        desc: 'Tamanhos disponíveis: 42/44/52 ao 58 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Prata 4571',                desc: 'Tamanhos disponíveis: 48/52/54/56 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Prata 4291',                desc: 'Tamanhos disponíveis: 42/54/56/58/62/64 | Via do Terno' },
-      { name: 'Terno Microfibra Padrao Liso - Prata 004006',              desc: 'Tamanhos disponíveis: 42/52/58/60/62/64/66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Prata 3169',                desc: 'Tamanhos disponíveis: 42 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Cinza Claro MF 3885',       desc: 'Tamanhos disponíveis: 42/44/46/50/52/54/56/62 | Via do Terno' },
-      { name: 'Terno Microfibra Padrao Liso - Branco 3577',               desc: 'Tamanhos disponíveis: 42/44/52/58/62 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Branco 003976',             desc: 'Tamanhos disponíveis: 42/44/52/54/56/58/60 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Chumbo 004021',             desc: 'Tamanhos disponíveis: 42 ao 66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Chumbo 3891',               desc: 'Tamanhos disponíveis: 42 ao 62/66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Cinza 3790',                desc: 'Tamanhos disponíveis: 42/44/46/58/60/62/64/66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Titânio 3312',              desc: 'Tamanhos disponíveis: 46/60/62/66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Titânio 3256',              desc: 'Tamanhos disponíveis: 46/54/56/60/62 | Via do Terno' },
-      { name: 'Terno Microfibra Premium Firenze Check - Aço 3894',        desc: 'Tamanhos disponíveis: 42/44/60 | Via do Terno' },
-      { name: 'Terno Microfibra Premium Encerado - Areia 3601',           desc: 'Tamanhos disponíveis: 44/46/60 | Via do Terno' },
-      { name: 'Terno Microfibra Firenze Quadri - Kaky 4003',              desc: 'Tamanhos disponíveis: 42/44 | Tradição italiana, xadrez sutil | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Cinza Claro MF 4294',       desc: 'Tamanhos disponíveis: 42/44/56/58/60/62/64/66 | Via do Terno' },
-      { name: 'Terno Microfibra Firenze Quadri - Navy 4000',              desc: 'Tamanhos disponíveis: 42/44/52/66 | Tradição italiana, xadrez sutil | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Azul Marinho 4503',         desc: 'Tamanhos disponíveis: 42 ao 54 | Via do Terno' },
-      { name: 'Terno Microfibra Firenze Quadri - Cinza 3997',             desc: 'Tamanhos disponíveis: 44/56/60/66 | Tradição italiana, xadrez sutil | Via do Terno' },
-      { name: 'Terno Microfibra Firenze Quadri - Chumbo 3994',            desc: 'Tamanhos disponíveis: 44/66 | Tradição italiana, xadrez sutil | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Escuro MF 4297',            desc: 'Tamanhos disponíveis: 44/52/56/58/62 | Via do Terno' },
-      { name: 'Terno Microfibra WR Impermeável - Preto 937',              desc: 'Tamanhos disponíveis: 42/44 | Impermeável | Via do Terno' },
-      { name: 'Terno Microfibra Stretch - Azul 541',                      desc: 'Tamanhos disponíveis: 44 | Via do Terno' },
-      { name: 'Terno Microfibra Stretch Liso - Verde 4386',               desc: 'Tamanhos disponíveis: 42 ao 66 | Via do Terno' },
-      { name: 'Terno Microfibra Stretch Liso - Areia 3776',               desc: 'Tamanhos disponíveis: 42/56/60/62 | Via do Terno' },
-      { name: 'Terno Microfibra Stretch Liso - Areia 3646',               desc: 'Tamanhos disponíveis: 56/58/60/62 | Via do Terno' },
-      { name: 'Terno Microfibra Stretch Liso - Vinho 3764',               desc: 'Tamanhos disponíveis: 42/50/58/62/66 | Via do Terno' },
-      { name: 'Terno Microfibra Stretch Liso - Astral 4383',              desc: 'Tamanhos disponíveis: 42 ao 66 | Via do Terno' },
-      { name: 'Terno Microfibra Stretch Liso - Astral 3773',              desc: 'Tamanhos disponíveis: 44/52 ao 66 | Via do Terno' },
-      { name: 'Terno Microfibra Stretch Liso - Astral 3652',              desc: 'Tamanhos disponíveis: 44/62/64/66 | Via do Terno' },
-      { name: 'Terno Microfibra Stretch Liso - Cinza 3643',               desc: 'Tamanhos disponíveis: 42/44/46/58/60 | Via do Terno' },
-      { name: 'Terno Microfibra Stretch Liso - Cinza 3586',               desc: 'Tamanhos disponíveis: 62/66 | Via do Terno' },
-      { name: 'Terno Microfibra Stretch Liso - Cinza 2758',               desc: 'Tamanhos disponíveis: 42/62/64/66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Caqui 3686',                desc: 'Tamanhos disponíveis: 42/44/54 ao 66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Caqui 3440',                desc: 'Tamanhos disponíveis: 42/44/58 ao 66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Homus 4430',                desc: 'Tamanhos disponíveis: 42/52 ao 66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrao Liso - Verde Sálvia 1330',         desc: 'Tamanhos disponíveis: 42/44/52 ao 66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Dark Blue 3879',            desc: 'Tamanhos disponíveis: 42/44/54/60/62/66 | Via do Terno' },
-      { name: 'Terno Microfibra Padrão Liso - Dark Blue 4018',            desc: 'Tamanhos disponíveis: 42 ao 52/58/62 | Via do Terno' },
+      { name: 'Terno Microfibra Stretch Liso - Vinho 3764',                desc: 'Tamanhos disponíveis: 42/62/66 | Via do Terno' },
+      { name: 'Terno Microfibra Stretch Liso - Areia 3646',                desc: 'Tamanhos disponíveis: 56/58/60/62 | Via do Terno' },
+      { name: 'Terno Microfibra Stretch Liso - Areia 3592',                desc: 'Tamanhos disponíveis: 58 | Via do Terno' },
+      { name: 'Terno Microfibra Stretch Liso - Bege 3056',                 desc: 'Tamanhos disponíveis: 62 | Via do Terno' },
+      { name: 'Terno Microfibra Stretch Liso - Astral 3652',               desc: 'Tamanhos disponíveis: 62/64/66 | Via do Terno' },
+      { name: 'Terno Microfibra Stretch Liso - Astral 3773',               desc: 'Tamanhos disponíveis: 42/44/58/60/62/64/66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Detalhado - Chumbo 004460',         desc: 'Tamanhos disponíveis: 54/56/58/62/64/66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Detalhado - Branco 4285',           desc: 'Tamanhos disponíveis: 52/54/56 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Xadrez - Marinho 002709',           desc: 'Tamanhos disponíveis: 42/44/58 | Coleção Estação Real | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Xadrez - Cinza 4427',               desc: 'Tamanhos disponíveis: 42/60/62/64/66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Melange - Bege 2812',               desc: 'Tamanhos disponíveis: 60/62/64 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Xadrez - Aço 2712',                 desc: 'Tamanhos disponíveis: 42/44 | Via do Terno' },
+      { name: 'Terno Microfibra Premium Firenze Check - Aço 3894',         desc: 'Tamanhos disponíveis: 42/44/60 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Bege 3191',                  desc: 'Tamanhos disponíveis: 42/44/58/62 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Melange - Cinza 749',               desc: 'Tamanhos disponíveis: 58 | Via do Terno' },
+      { name: 'Terno Microfibra Stretch Mescla - Preto 4454',              desc: 'Tamanhos disponíveis: 42/44/52/54/56/58/60 | Via do Terno' },
+      { name: 'Terno Microfibra Firenze Quadri - Marinho 4503',            desc: 'Tamanhos disponíveis: 42/44/56 ao 66 | Tradição italiana. Xadrez sutil. Alfaiataria moderna. | Via do Terno' },
+      { name: 'Terno Microfibra Premium Encerado - Areia 3601',            desc: 'Tamanhos disponíveis: 44/46/48/56 ao 66 | Via do Terno' },
+      { name: 'Terno Microfibra Firenze Quadri - Kaki 4294',               desc: 'Tamanhos disponíveis: 42/56/58/62/64/66 | Tradição italiana. Xadrez sutil. Alfaiataria moderna. | Via do Terno' },
+      { name: 'Terno Microfibra Firenze Quadri - Navy 4565',               desc: 'Tamanhos disponíveis: 42/56 ao 66 | Tradição italiana. Xadrez sutil. Alfaiataria moderna. | Via do Terno' },
+      { name: 'Terno Microfibra Firenze Quadri - Chumbo 4297',             desc: 'Tamanhos disponíveis: 44/62 | Tradição italiana. Xadrez sutil. Alfaiataria moderna. | Via do Terno' },
+      { name: 'Terno Microfibra Firenze Quadri - Chumbo 3994',             desc: 'Tamanhos disponíveis: 44 | Tradição italiana. Xadrez sutil. Alfaiataria moderna. | Via do Terno' },
+      { name: 'Terno Microfibra Stretch Liso - Cinza 3586',                desc: 'Tamanhos disponíveis: 62/66 | Via do Terno' },
+      { name: 'Terno Microfibra Stretch Liso - Cinza 3643',                desc: 'Tamanhos disponíveis: 42/44/56/58 | Via do Terno' },
+      { name: 'Terno Microfibra Stretch Liso - Asphalt 3761',              desc: 'Tamanhos disponíveis: 42 ao 62/66 | Via do Terno' },
+      { name: 'Terno Microfibra Stretch Liso - Cinza 2758',                desc: 'Tamanhos disponíveis: 42/62/64 | Via do Terno' },
+      { name: 'Terno Microfibra Stretch Liso - Branco 3655',               desc: 'Tamanhos disponíveis: 42/52/58/60 | Via do Terno' },
+      { name: 'Terno Microfibra Stretch Liso - Branco 3589',               desc: 'Tamanhos disponíveis: 44/58/60 | Via do Terno' },
+      { name: 'Terno Microfibra Stretch Liso - Preto 3583',                desc: 'Tamanhos disponíveis: 56/60 | Via do Terno' },
+      { name: 'Terno Microfibra Stretch Liso - Asphalt 3658',              desc: 'Tamanhos disponíveis: 42 ao 52/56/60 ao 66 | Via do Terno' },
+      { name: 'Terno Microfibra Stretch Liso - Asphalt 3580',              desc: 'Tamanhos disponíveis: 42/44/46/58/60/62 | Via do Terno' },
+      { name: 'Terno Microfibra Stretch Liso - Asphalt 2514',              desc: 'Tamanhos disponíveis: 42/44 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Caqui 3440',                 desc: 'Tamanhos disponíveis: 42/44/56 ao 66 | Via do Terno' },
+      { name: 'Terno Microfibra Stretch Liso - Preto 3770',                desc: 'Tamanhos disponíveis: 56/60 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Branco 3577',                desc: 'Tamanhos disponíveis: 42/44/52/58 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Caqui 3686',                 desc: 'Tamanhos disponíveis: 42/44/54 ao 66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Verde Sálvia 1330',          desc: 'Tamanhos disponíveis: 42/44/54 ao 66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Areia 3300',                 desc: 'Tamanhos disponíveis: 44/52/56 ao 66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Militar',                    desc: 'Tamanhos disponíveis: 42/54/56/62/64/66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Homus 4568',                 desc: 'Tamanhos disponíveis: 42/46/52 ao 66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - MF 4018',                    desc: 'Tamanhos disponíveis: 42 ao 66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Midnight 4517',              desc: 'Tamanhos disponíveis: 42 ao 66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Midnight 4273',              desc: 'Tamanhos disponíveis: 42 ao 66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Dark Blue 3879',             desc: 'Tamanhos disponíveis: 44/48/54/60/62 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Dark Blue 3677',             desc: 'Tamanhos disponíveis: 42/44/50/52/54/56/62/64 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Navy 4421',                  desc: 'Tamanhos disponíveis: 46/52/54/56/58/60/62/64/66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Blue 3604',                  desc: 'Tamanhos disponíveis: 42/44/60/62 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Azul 3262',                  desc: 'Tamanhos disponíveis: 42/44/60/62 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Azul 3437',                  desc: 'Tamanhos disponíveis: 44 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Azul 3306',                  desc: 'Tamanhos disponíveis: 44 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Cinza 4574',                 desc: 'Tamanhos disponíveis: 42 ao 66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Caramelo 4520',              desc: 'Tamanhos disponíveis: 42/44/52/56/58/60/62 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Grafite 3431',               desc: 'Tamanhos disponíveis: 42/44/46/58/60 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Grafite 2690',               desc: 'Tamanhos disponíveis: 42/44/46 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Cinza 4506',                 desc: 'Tamanhos disponíveis: 42 ao 66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Grafite 3198',               desc: 'Tamanhos disponíveis: 42/44/66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Cinza 3683',                 desc: 'Tamanhos disponíveis: 42/44/58/60/62/64/66 | Via do Terno' },
+      null, // foto extra do Grafite 2690 (mesma peça, ângulo diferente)
+      { name: 'Terno Microfibra Padrão Liso - Ice 4424',                   desc: 'Tamanhos disponíveis: 56/58/62/66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Black Jet 3674',             desc: 'Tamanhos disponíveis: 44/50 ao 64 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Black Jet 004015',           desc: 'Tamanhos disponíveis: 44/54/58 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Preto 3565',                 desc: 'Tamanhos disponíveis: 50 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Black Jet 4288',             desc: 'Tamanhos disponíveis: 54 ao 66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Black Jet 3979',             desc: 'Tamanhos disponíveis: 42/44/48/52/54/58 ao 62/66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Preto 3607',                 desc: 'Tamanhos disponíveis: 52/58 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Preto 2870',                 desc: 'Tamanhos disponíveis: 62/64 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Preto 3181',                 desc: 'Tamanhos disponíveis: 44/60/62 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Preto 3253',                 desc: 'Tamanhos disponíveis: 44/52/60/62 | Via do Terno' },
+      null, // foto extra do Preto 3253 (mesmo código, ângulo diferente)
+      { name: 'Terno Microfibra Padrão Liso - Chumbo 004021',              desc: 'Tamanhos disponíveis: 42/44/52/54/58 ao 66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Prata 3169',                 desc: 'Tamanhos disponíveis: 42 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Cinza 3790',                 desc: 'Tamanhos disponíveis: 58/60/62/66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Chumbo 3891',                desc: 'Tamanhos disponíveis: 42 ao 62/66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Chumbo 1274',                desc: 'Tamanhos disponíveis: 42 ao 66 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Titânio 3256',               desc: 'Tamanhos disponíveis: 60/62 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Chumbo 3680',                desc: 'Tamanhos disponíveis: 42/44/48/52/54/58/60/62/64 | Via do Terno' },
+      { name: 'Terno Microfibra Padrão Liso - Black Jet 4511',             desc: 'Tamanhos disponíveis: 44 ao 66 | Via do Terno' },
     ],
   },
 
+  // Catálogo "POLIVISCOSE - 10.09.pdf" — transcrito manualmente das 62 páginas
+  // (substitui o catálogo Poliviscose anterior, de uma versão mais antiga do PDF).
+  // O namePatternExclude evita apagar os produtos de "poliviscose_com_ajuste"
+  // (que também contêm "Poliviscose" no nome) quando este catálogo é reimportado.
   poliviscose: {
     category: 'ternos',
+    namePattern: 'Poliviscose',
+    namePatternExclude: 'Regulagem',
     pages: [
       { name: 'Terno Poliviscose Stretch Antuerpia Prime Fosco - Preto 4535',        desc: 'Tamanhos disponíveis: 42/46/54 ao 66 | Via do Terno' },
       { name: 'Terno Poliviscose Stretch Antuerpia Prime Fosco - Marsala 4544',      desc: 'Tamanhos disponíveis: 42/44/50 ao 58/62 | Meridian Collection | Via do Terno' },
@@ -163,7 +177,7 @@ const CATALOGS = {
       { name: 'Terno Poliviscose Antuerpia Prime Encerado - Preto 4713',             desc: 'Tamanhos disponíveis: 42/52/58/60/62/64/66 | Via do Terno' },
       { name: 'Terno Poliviscose Stretch Antuerpia Prime Fosco - Black 4547',        desc: 'Tamanhos disponíveis: 42/44/46/52/58/60 ao 66 | Via do Terno' },
       { name: 'Terno Poliviscose Antuerpia Prime Fosco - Astral 4707',               desc: 'Tamanhos disponíveis: 42 ao 66 | Via do Terno' },
-      { name: 'Terno Poliviscose Antuerpia Prime London Noble - Marinho 4433',      desc: 'Tamanhos disponíveis: 48/50 | Meridian Collection | Via do Terno' },
+      { name: 'Terno Poliviscose Antuerpia Prime London Noble - Marinho 4433',       desc: 'Tamanhos disponíveis: 48/50 | Meridian Collection | Via do Terno' },
       { name: 'Terno Poliviscose Antuerpia Prime Liso - Vinho 4699',                 desc: 'Tamanhos disponíveis: 46/52/56/62/66 | Via do Terno' },
       { name: 'Terno Poliviscose Antuerpia Semi Encerado - 152011',                  desc: 'Tamanhos disponíveis: 42/44 | Via do Terno' },
       { name: 'Terno Poliviscose Stretch Antuerpia Prime Fosco - Chumbo 4215',       desc: 'Tamanhos disponíveis: 42/44/56 | Via do Terno' },
@@ -182,7 +196,7 @@ const CATALOGS = {
       { name: 'Terno Poliviscose Antuerpia Prime Fosco - Astral 4442',               desc: 'Tamanhos disponíveis: 42/44/46/54/58/60/62/66 | Via do Terno' },
       { name: 'Terno Poliviscose Antuerpia Semi Encerado - Steel Gray 004204',       desc: 'Tamanhos disponíveis: 42/58/66 | Via do Terno' },
       { name: 'Terno Poliviscose Antuerpia Semi Encerado - Steel 3830',              desc: 'Tamanho disponível: 42 | Via do Terno' },
-      { name: 'Terno Poliviscose Padrão Xadrez - Cinza 3461',                       desc: 'Tamanhos disponíveis: 42/44/60 | Via do Terno' },
+      { name: 'Terno Poliviscose Padrão Xadrez - Cinza 3461',                        desc: 'Tamanhos disponíveis: 42/44/60 | Via do Terno' },
       { name: 'Terno Poliviscose Stretch Detalhado - Homus 3866',                    desc: 'Tamanhos disponíveis: 60/62 | Via do Terno' },
       { name: 'Terno Poliviscose Antuerpia Fosco - Preto 4207',                      desc: 'Tamanhos disponíveis: 42/54/56/58/62/64 | Via do Terno' },
       { name: 'Terno Poliviscose Antuerpia Semi Encerado - Preto 3949',              desc: 'Tamanhos disponíveis: 42/56 ao 62 | Via do Terno' },
@@ -218,8 +232,12 @@ const CATALOGS = {
     ],
   },
 
+  // Catálogo "POLIVISCOSE COM AJUSTE - 10.09.pdf" — transcrito manualmente das 14 páginas.
+  // Todos os produtos têm "Regulagem"/"com Ajuste" no nome, usado para
+  // isolar este catálogo do "poliviscose" base ao reimportar (ver namePatternExclude acima).
   poliviscose_com_ajuste: {
     category: 'ternos',
+    namePattern: 'Regulagem',
     pages: [
       { name: 'Terno Poliviscose Stretch Antuerpia Prime Regulagem Mescla - Dove Gray 4951', desc: 'Tamanhos disponíveis: 42/48/56/62 | Metropolitan Collection | Via do Terno' },
       { name: 'Terno Poliviscose Antuerpia Prime Regulagem Fosco - Preto 4948',              desc: 'Tamanhos disponíveis: 52/54/56/58/64 | Via do Terno' },
@@ -238,6 +256,7 @@ const CATALOGS = {
     ],
   },
 
+  // Catálogo "FIO INDIANO E ROCHESTER - 10.09.pdf" — transcrito manualmente das 6 páginas.
   fio_indiano_rochester: {
     category: 'ternos',
     pages: [
@@ -311,7 +330,7 @@ async function main() {
   const [,, pdfPath, catalogType, priceStr] = process.argv
   if (!pdfPath || !catalogType || !priceStr) {
     console.error('Uso: node scripts/import-pdf-with-images.mjs <pdf> <tipo> <preco>')
-    console.error('Tipos: elastomultiester | infantil | microfibra | poliviscose | feminino')
+    console.error('Tipos: elastomultiester | infantil | microfibra | poliviscose | poliviscose_com_ajuste | feminino | fio_indiano_rochester')
     process.exit(1)
   }
 
@@ -333,6 +352,26 @@ async function main() {
   const cats = await apiJSON('categories?select=id,slug')
   const catId = cats.find(c => c.slug === catalog.category)?.id
   if (!catId) throw new Error(`Categoria "${catalog.category}" não encontrada`)
+
+  // substitui o catálogo antigo: apaga os produtos já cadastrados cujo nome
+  // contém o namePattern do catálogo antes de importar os novos (evita
+  // duplicar/misturar versões diferentes do mesmo catálogo). namePatternExclude
+  // protege produtos de um catálogo "irmão" que compartilha parte do nome
+  // (ex.: "poliviscose" não deve apagar os de "poliviscose_com_ajuste").
+  if (catalog.namePattern) {
+    let query = `products?category_id=eq.${catId}&name=ilike.*${encodeURIComponent(catalog.namePattern)}*&select=id,name`
+    if (catalog.namePatternExclude) {
+      query += `&name=not.ilike.*${encodeURIComponent(catalog.namePatternExclude)}*`
+    }
+    const existing = await apiJSON(query)
+    if (existing?.length) {
+      console.log(`Removendo ${existing.length} produto(s) antigo(s) de "${catalog.namePattern}"...`)
+      for (const p of existing) {
+        await apiJSON(`products?id=eq.${p.id}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } })
+      }
+      console.log('Remoção concluída.\n')
+    }
+  }
 
   // carregar PDF
   const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs')
