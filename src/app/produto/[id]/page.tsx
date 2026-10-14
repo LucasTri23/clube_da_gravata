@@ -99,7 +99,8 @@ export default function ProdutoPage() {
                   src={images[currentImage]}
                   alt={product.name}
                   fill
-                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className={product.name.startsWith('Kit Gravata,') ? 'object-contain' : 'object-cover'}
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-[#6b7280]">
