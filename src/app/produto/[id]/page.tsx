@@ -1,9 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { Suspense, useEffect, useState } from 'react'
+import { useParams, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/components/layout/NavigationLink'
+import PageLoading from '@/components/layout/PageLoading'
+import { catalogReturnURL } from '@/lib/catalog-navigation'
 import { ShoppingCart, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
@@ -13,12 +15,18 @@ import { buildWhatsAppProductURL } from '@/lib/whatsapp'
 import { Product } from '@/types'
 
 export default function ProdutoPage() {
+  return <Suspense fallback={<PageLoading />}><ProductDetail /></Suspense>
+}
+
+function ProductDetail() {
   const { id } = useParams<{ id: string }>()
+  const searchParams = useSearchParams()
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [currentImage, setCurrentImage] = useState(0)
   const [added, setAdded] = useState(false)
   const { addItem } = useCart()
+  const catalogHref = catalogReturnURL(searchParams.get('retorno'), product?.category?.slug)
 
   useEffect(() => {
     const supabase = createClient()
@@ -56,7 +64,7 @@ export default function ProdutoPage() {
       <div className="flex flex-col min-h-screen">
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
-          <div className="w-8 h-8 border-2 border-[#C9A84C] border-t-transparent rounded-full animate-spin" />
+          <PageLoading />
         </div>
       </div>
     )
@@ -68,7 +76,7 @@ export default function ProdutoPage() {
         <Navbar />
         <div className="flex-1 flex flex-col items-center justify-center gap-4">
           <p className="text-[#6b7280]">Produto não encontrado.</p>
-          <Link href="/catalogo" className="text-[#C9A84C] hover:underline">
+          <Link href={catalogHref} className="text-[#C9A84C] hover:underline">
             Voltar ao catálogo
           </Link>
         </div>
@@ -83,7 +91,7 @@ export default function ProdutoPage() {
       <Navbar />
       <main className="flex-1 max-w-7xl mx-auto px-4 py-10 w-full">
         <Link
-          href="/catalogo"
+          href={catalogHref}
           className="inline-flex items-center gap-1 text-[#6b7280] hover:text-[#C9A84C] text-sm mb-8 transition-colors"
         >
           <ArrowLeft size={16} />
@@ -195,7 +203,7 @@ export default function ProdutoPage() {
               <p className="text-[#6b7280] text-sm">
                 💬 Dúvidas sobre o produto?{' '}
                 <a
-                  href={buildWhatsAppProductURL(product)}
+                  href={buildWhatsAppProductURL(product, typeof window === 'undefined' ? undefined : window.location.origin)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#C9A84C] hover:underline"

@@ -61,7 +61,7 @@ export default async function CatalogoPage({ searchParams }: Props) {
             )}
           </div>
           <Suspense>
-            <SearchBar />
+            <SearchBar key={q ?? ''} />
           </Suspense>
         </div>
 

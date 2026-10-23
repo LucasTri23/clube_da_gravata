@@ -1,25 +1,14 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/components/layout/NavigationLink'
+import Image from 'next/image'
 import { ShoppingCart, Menu, X } from 'lucide-react'
 import { useCart } from '@/contexts/CartContext'
 import { useState } from 'react'
 import ThemeToggle from './ThemeToggle'
 
 function TieLogo() {
-  return (
-    <div
-      className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-      style={{ border: '2px solid var(--gold)', background: 'var(--bg)' }}
-    >
-      <svg width="18" height="22" viewBox="0 0 18 24" fill="none">
-        <path d="M5.5 2L9 7.5" stroke="var(--gold)" strokeWidth="1.6" strokeLinecap="round" />
-        <path d="M12.5 2L9 7.5" stroke="var(--gold)" strokeWidth="1.6" strokeLinecap="round" />
-        <ellipse cx="9" cy="9.2" rx="2.3" ry="1.8" fill="var(--gold)" />
-        <path d="M6.7 10.8L5.2 23L9 25L12.8 23L11.3 10.8Z" fill="var(--gold)" />
-      </svg>
-    </div>
-  )
+  return <Image src="/brand/clube-da-gravata.jpg" alt="" width={44} height={44} className="rounded-full ring-1 ring-[#C9A84C]/50 flex-shrink-0" />
 }
 
 const NAV_LINKS = [

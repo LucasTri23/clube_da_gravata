@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/components/layout/NavigationLink'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import ProductCard from '@/components/catalog/ProductCard'
@@ -61,6 +61,7 @@ export default async function HomePage() {
           }}
         />
         <div className="max-w-7xl mx-auto px-4 pt-20 pb-24 md:pt-32 md:pb-44 relative">
+          <Image src="/brand/clube-da-gravata.jpg" alt="Clube da Gravata" width={112} height={112} className="rounded-full mb-6 shadow-xl ring-1 ring-[#C9A84C]/60" />
           <div className="flex items-center gap-4 mb-8">
             <div className="h-px w-10" style={{ background: '#C9A84C' }} />
             <p className="text-xs font-semibold tracking-[0.35em] uppercase" style={{ color: '#C9A84C' }}>

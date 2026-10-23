@@ -1,31 +1,33 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Search, X } from 'lucide-react'
+import { Search, X, LoaderCircle } from 'lucide-react'
 
 export default function SearchBar() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [value, setValue] = useState(searchParams.get('q') ?? '')
+  const [isPending, startTransition] = useTransition()
 
   function submit(e: React.FormEvent) {
     e.preventDefault()
     const params = new URLSearchParams(searchParams.toString())
     if (value.trim()) params.set('q', value.trim())
     else params.delete('q')
-    router.push(`/catalogo?${params.toString()}`)
+    startTransition(() => router.push(`/catalogo?${params.toString()}`))
   }
 
   function clear() {
     setValue('')
     const params = new URLSearchParams(searchParams.toString())
     params.delete('q')
-    router.push(`/catalogo?${params.toString()}`)
+    startTransition(() => router.push(`/catalogo?${params.toString()}`))
   }
 
   return (
-    <form onSubmit={submit} className="relative w-full sm:max-w-xs">
+    <form onSubmit={submit} className="relative w-full sm:max-w-xs" aria-busy={isPending}>
+      {isPending && <LoaderCircle size={16} className="absolute right-10 top-3 animate-spin" aria-label="Buscando produtos" />}
       <Search
         size={16}
         className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
@@ -35,6 +37,8 @@ export default function SearchBar() {
         type="text"
         value={value}
         onChange={e => setValue(e.target.value)}
+        disabled={isPending}
+        aria-label="Buscar produtos"
         placeholder="Buscar produtos..."
         className="w-full pl-9 pr-9 py-2.5 rounded-lg text-sm border transition-colors outline-none"
         style={{ background: 'var(--bg-card)', borderColor: 'var(--border)', color: 'var(--text)' }}

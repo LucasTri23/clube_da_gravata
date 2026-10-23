@@ -1,21 +1,27 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
-import { ShoppingCart } from 'lucide-react'
+import Link from '@/components/layout/NavigationLink'
+import { ShoppingCart, Check } from 'lucide-react'
+import { useState } from 'react'
 import { useCart } from '@/contexts/CartContext'
 import { Product } from '@/types'
 
 interface Props {
   product: Product
+  catalogHref?: string
 }
 
-export default function ProductCard({ product }: Props) {
+export default function ProductCard({ product, catalogHref }: Props) {
   const { addItem } = useCart()
+  const [added, setAdded] = useState(false)
   const image = product.images?.[0] ?? ''
 
   function handleAddToCart(e: React.MouseEvent) {
     e.preventDefault()
+    e.stopPropagation()
+    setAdded(true)
+    setTimeout(() => setAdded(false), 1800)
     addItem({
       id: product.id,
       name: product.name,
@@ -32,7 +38,7 @@ export default function ProductCard({ product }: Props) {
 
   return (
     <Link
-      href={`/produto/${product.id}`}
+      href={`/produto/${product.id}${catalogHref ? `?retorno=${encodeURIComponent(catalogHref)}` : ''}`}
       className="product-card group block rounded-xl overflow-hidden border transition-all duration-200"
       style={{ background: 'var(--bg-card)', borderColor: 'var(--border)' }}
     >
@@ -72,11 +78,12 @@ export default function ProductCard({ product }: Props) {
           </span>
           <button
             onClick={handleAddToCart}
-            className="flex items-center gap-1.5 text-black text-xs font-semibold px-3 py-1.5 rounded transition-opacity hover:opacity-80"
-            style={{ background: 'var(--gold)' }}
+            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded transition-colors hover:brightness-110"
+            style={{ background: added ? '#15803d' : 'var(--gold)', color: added ? '#fff' : '#000' }}
+            aria-label={`${added ? 'Adicionado' : 'Adicionar ao carrinho'}: ${product.name}`}
           >
-            <ShoppingCart size={13} />
-            Adicionar
+            {added ? <Check size={13} /> : <ShoppingCart size={13} />}
+            {added ? 'Adicionado!' : 'Adicionar'}
           </button>
         </div>
       </div>

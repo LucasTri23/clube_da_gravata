@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useTransition } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { SlidersHorizontal, X, PackageSearch } from 'lucide-react'
 import ProductCard from './ProductCard'
@@ -11,8 +11,10 @@ interface Props {
   categoria: string
 }
 
-function extractTipo(name: string): string {
-  const m = name.match(/^Terno (Microfibra|Poliviscose|Elastomultiéster|Rochester|Fio Indiano)/)
+function extractTipo(name: string, description: string | null): string {
+  const model = description?.match(/Modelo:\s*([^|]+)/)?.[1]?.trim()
+  if (model) return model
+  const m = name.match(/^Terno (Microfibra|Poliviscose|Elastomultiéster|Heritage Intreccio|Rochester|Fio Indiano)/)
   return m?.[1] ?? ''
 }
 
@@ -53,6 +55,8 @@ function unique<T>(arr: T[]): T[] {
 export default function CatalogClient({ products, categoria }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const [isPending, startTransition] = useTransition()
+  const catalogHref = `/catalogo${searchParams.size ? `?${searchParams.toString()}` : ''}`
 
   const tipo = searchParams.get('tipo') ?? ''
   const tamanho = searchParams.get('tamanho') ?? ''
@@ -64,14 +68,14 @@ export default function CatalogClient({ products, categoria }: Props) {
     const params = new URLSearchParams(searchParams.toString())
     if (value) params.set(key, value)
     else params.delete(key)
-    router.replace(`/catalogo?${params.toString()}`, { scroll: false })
+    startTransition(() => router.replace(`/catalogo?${params.toString()}`, { scroll: false }))
   }
 
   const isTernos = categoria === 'ternos'
   const isGravatas = categoria === 'gravatas'
 
   const tipos = useMemo(
-    () => unique(products.map(p => extractTipo(p.name)).filter(Boolean)).sort(),
+    () => unique(products.map(p => extractTipo(p.name, p.description)).filter(Boolean)).sort(),
     [products]
   )
   const cores = useMemo(
@@ -93,7 +97,7 @@ export default function CatalogClient({ products, categoria }: Props) {
 
   const filtered = useMemo(() => products.filter(p => {
     if (isTernos) {
-      if (tipo && extractTipo(p.name) !== tipo) return false
+      if (tipo && extractTipo(p.name, p.description) !== tipo) return false
       if (tamanho && !extractSizes(p.description).includes(tamanho)) return false
       if (cor && extractCor(p.name) !== cor) return false
     }
@@ -124,7 +128,7 @@ export default function CatalogClient({ products, categoria }: Props) {
     const params = new URLSearchParams(searchParams.toString())
     params.delete('tipo'); params.delete('tamanho'); params.delete('cor')
     params.delete('modelo'); params.delete('preco')
-    router.replace(`/catalogo?${params.toString()}`, { scroll: false })
+    startTransition(() => router.replace(`/catalogo?${params.toString()}`, { scroll: false }))
   }
 
   return (
@@ -141,7 +145,7 @@ export default function CatalogClient({ products, categoria }: Props) {
             </span>
           </div>
 
-          <div className="flex items-center gap-3 flex-wrap">
+          <fieldset disabled={isPending} className="flex items-center gap-3 flex-wrap disabled:opacity-60" aria-label="Filtros do catálogo">
             {isTernos && (
               <>
                 <FilterSelect label="Tipo" value={tipo} onChange={v => setFilter('tipo', v)} options={tipos} />
@@ -161,7 +165,8 @@ export default function CatalogClient({ products, categoria }: Props) {
                 />
               </>
             )}
-          </div>
+          </fieldset>
+          {isPending && <p role="status" className="mt-3 text-sm" style={{ color: 'var(--gold)' }}>Atualizando produtos...</p>}
 
           {hasFilters && (
             <div className="flex items-center gap-2 flex-wrap mt-3 pt-3 border-t" style={{ borderColor: 'var(--border)' }}>
@@ -209,7 +214,7 @@ export default function CatalogClient({ products, categoria }: Props) {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {filtered.map(product => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} catalogHref={catalogHref} />
           ))}
         </div>
       )}
